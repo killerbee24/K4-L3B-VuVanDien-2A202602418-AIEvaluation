@@ -6,14 +6,14 @@ Tài liệu này định nghĩa 6 mốc tiến độ (Checkpoints CP0–CP5) tro
 
 ## Bảng tổng quan tiến độ (Schedule)
 
-| Checkpoint | Khoảng thời gian | Mốc thời gian mẫu | Nội dung trọng tâm | Kết quả kiểm tra chính |
-|---|---|---|---|---|
-| **CP0** Setup | Start + 0–15m | 9:15–9:30 | Môi trường, `.env`, baseline tests | 42 failed baseline |
-| **CP1** Data Models | Start + 15–30m | 9:30–9:45 | Task 1: `QAPair`, `EvalResult`, `overall_score` | 3 passed |
-| **CP2** Metrics | Start + 30–65m | 9:45–10:20 | Task 2–3: RAGAS metrics & LLMJudge | 21 passed, 20 failed, 1 skipped |
-| **CP3** Runner & Analyzer | Start + 65–85m | 10:20–10:40 | Task 4–5: BenchmarkRunner, FailureAnalyzer | 41 passed, 1 skipped (full suite) |
-| **CP4** Dataset & Benchmark | Start + 85–140m | 10:40–11:35 | 20 QA golden dataset, RAG run, Exercise 3.2 & 3.3 | Validator PASS, artifacts generated |
-| **CP5** Reflection & Finalize | Start + 140–165m | 11:35–12:00 | `reflection.md`, copy `solution/solution.py`, kiểm tra cuối | 41 passed, validator PASS, clean repo |
+| Checkpoint                    | Khoảng thời gian | Mốc thời gian mẫu | Nội dung trọng tâm                                          | Kết quả kiểm tra chính                |
+| ----------------------------- | ---------------- | ----------------- | ----------------------------------------------------------- | ------------------------------------- |
+| **CP0** Setup                 | Start + 0–15m    | 9:15–9:30         | Môi trường,`.env`, baseline tests                           | 42 failed baseline                    |
+| **CP1** Data Models           | Start + 15–30m   | 9:30–9:45         | Task 1:`QAPair`, `EvalResult`, `overall_score`              | 3 passed                              |
+| **CP2** Metrics               | Start + 30–65m   | 9:45–10:20        | Task 2–3: RAGAS metrics & LLMJudge                          | 21 passed, 20 failed, 1 skipped       |
+| **CP3** Runner & Analyzer     | Start + 65–85m   | 10:20–10:40       | Task 4–5: BenchmarkRunner, FailureAnalyzer                  | 41 passed, 1 skipped (full suite)     |
+| **CP4** Dataset & Benchmark   | Start + 85–140m  | 10:40–11:35       | 20 QA golden dataset, RAG run, Exercise 3.2 & 3.3           | Validator PASS, artifacts generated   |
+| **CP5** Reflection & Finalize | Start + 140–165m | 11:35–12:00       | `reflection.md`, copy `solution/solution.py`, kiểm tra cuối | 41 passed, validator PASS, clean repo |
 
 ---
 
@@ -45,10 +45,12 @@ Tài liệu này định nghĩa 6 mốc tiến độ (Checkpoints CP0–CP5) tro
   - Golden dataset cần những trường nào để phục vụ đánh giá (question, expected_answer, context, metadata, retrieved_contexts).
   - Phân định rõ ràng giữa Answer-side metrics (được tính vào `overall_score()`) và Retrieval-side metrics (`context_recall`, `context_precision` chỉ dùng chẩn đoán retrieval, không tính vào `overall_score()`).
 - **Tự kiểm tra:**
+
   ```bash
   pytest tests/test_solution.py::TestEvalResultOverallScore -v
   ```
-  *Kỳ vọng:* 3 passed.
+
+  _Kỳ vọng:_ 3 passed.
 
 ---
 
@@ -67,6 +69,7 @@ Tài liệu này định nghĩa 6 mốc tiến độ (Checkpoints CP0–CP5) tro
   - Rank-aware Average Precision@K thưởng cho retriever xếp chunk liên quan lên đầu.
   - Ba loại bias thường gặp của LLM-as-a-Judge và cách thiết kế rubric để giảm thiểu bias.
 - **Tự kiểm tra:**
+
   ```bash
   # Kiểm tra Task 2 (RAGAS Evaluator)
   pytest tests/test_solution.py::TestRAGASEvaluator tests/test_solution.py::TestContextMetrics tests/test_solution.py::TestRetrievalMetricWiring::test_run_full_eval_connects_optional_retrieval_metrics -v
@@ -76,7 +79,8 @@ Tài liệu này định nghĩa 6 mốc tiến độ (Checkpoints CP0–CP5) tro
   pytest tests/test_solution.py::TestLLMJudge -v
   # Kỳ vọng Task 3: 4 passed
   ```
-  *Toàn bộ suite cộng dồn:* `pytest tests/ -v` đạt 21 passed, 20 failed, 1 skipped.
+
+  _Toàn bộ suite cộng dồn:_ `pytest tests/ -v` đạt 21 passed, 20 failed, 1 skipped.
 
 ---
 
@@ -98,6 +102,7 @@ Tài liệu này định nghĩa 6 mốc tiến độ (Checkpoints CP0–CP5) tro
   - Nguyên lý failure clustering: sửa một root cause có thể giải quyết nhiều lỗi cùng lúc.
   - Vòng lặp cải tiến liên tục: Evaluate → Analyze → Improve → Augment → Repeat.
 - **Tự kiểm tra:**
+
   ```bash
   # Kiểm tra Task 4 & Task 5
   pytest tests/test_solution.py::TestBenchmarkRunner tests/test_solution.py::TestRunRegression tests/test_solution.py::TestRetrievalMetricWiring::test_runner_forwards_retrieved_contexts tests/test_solution.py::TestRetrievalMetricWiring::test_report_includes_retrieval_averages -v
@@ -106,7 +111,8 @@ Tài liệu này định nghĩa 6 mốc tiến độ (Checkpoints CP0–CP5) tro
   # Kiểm tra toàn bộ suite bắt buộc
   pytest tests/ -v
   ```
-  *Kỳ vọng:* **41 passed, 1 skipped** (test reranking Exercise 3.5 được skip nếu chưa làm bonus).
+
+  _Kỳ vọng:_ **41 passed, 1 skipped** (test reranking Exercise 3.5 được skip nếu chưa làm bonus).
 
 ---
 
@@ -121,12 +127,14 @@ Tài liệu này định nghĩa 6 mốc tiến độ (Checkpoints CP0–CP5) tro
   - Nguyên tắc tránh data leakage: `DomainAssistant` chỉ đọc `question`, không bao giờ được đọc `expected_answer` hay gold contexts khi trả lời.
   - Provenance của ground-truth: Mọi context và expected answer phải bắt nguồn xác thực từ các tài liệu trong `data/technology_store/*.md`.
 - **Tự kiểm tra:**
+
   ```bash
   python validate_golden_dataset.py
   python domain_assistant.py
   python evaluate_answers.py
   ```
-  *Kỳ vọng:* `validate_golden_dataset.py` báo kết quả **PASS**. Hai file artifact được tạo ra và có đầy đủ dữ liệu 20 câu hỏi.
+
+  _Kỳ vọng:_ `validate_golden_dataset.py` báo kết quả **PASS**. Hai file artifact được tạo ra và có đầy đủ dữ liệu 20 câu hỏi.
 
 ---
 
@@ -136,13 +144,16 @@ Tài liệu này định nghĩa 6 mốc tiến độ (Checkpoints CP0–CP5) tro
   - File `reflection.md` được điền đầy đủ: phân tích 3 failure cases bằng kỹ thuật 5 Whys, bảng failure taxonomy, improvement log và chiến lược regression testing.
   - File `solution/solution.py` đã được cập nhật bản hoàn thiện từ `template.py`.
   - Toàn bộ checklist nộp bài trong `SUBMISSION.md` được rà soát và đáp ứng.
+
 - **Cần hiểu:**
   - Phương pháp 5 Whys để đi từ triệu chứng bề mặt đến nguyên nhân gốc rễ (retrieval vs generation vs prompt).
   - Tầm quan trọng của việc kiểm tra toàn diện trước khi nộp bài để tránh mất điểm do lỗi tên repo hoặc thiếu file.
+
 - **Tự kiểm tra:**
-  > ⚠️ **Cảnh báo quan trọng về solution:**  
-  > Test suite luôn ưu tiên load `solution/solution.py` nếu file này tồn tại.  
-  > - **Chỉ chạy lệnh copy sau khi bạn đã hoàn thiện toàn bộ code trong `template.py`**.  
+
+  > ⚠️ **Cảnh báo quan trọng về solution:**Test suite luôn ưu tiên load `solution/solution.py` nếu file này tồn tại.
+  >
+  > - **Chỉ chạy lệnh copy sau khi bạn đã hoàn thiện toàn bộ code trong `template.py`**.
   > - **Nếu bạn làm bài trực tiếp trên `solution/solution.py`, TUYỆT ĐỐI KHÔNG chạy lệnh `cp` này** vì sẽ ghi đè và xóa mất toàn bộ code hoàn thiện của bạn bằng file `template.py` chưa hoàn thành! Hãy giữ hai file đồng bộ cẩn thận.
 
   ```bash
@@ -164,6 +175,7 @@ Tài liệu này định nghĩa 6 mốc tiến độ (Checkpoints CP0–CP5) tro
 ---
 
 ## Tài liệu liên quan
+
 - [README.md](README.md) — Tổng quan bài lab và hướng dẫn khởi động
 - [SUBMISSION.md](SUBMISSION.md) — Hướng dẫn nộp bài, định dạng tên repo và checklist
 - [RUBRIC.md](RUBRIC.md) — Tiêu chí chấm điểm chi tiết và các trường hợp trừ điểm

@@ -13,14 +13,14 @@ cases.
 
 **Overall pass rate:** 40.0% (8/20 cases)
 
-| Metric | Average | Min | Max | Nhận xét |
-|---|---:|---:|---:|---|
-| Context Recall | 0.778 | 0.192 | 1.000 | Coverage trung bình khá nhưng có lỗ hổng lớn ở A01, M07 và H04. |
-| Context Precision | 0.983 | 0.888 | 1.000 | Các chunk được coi là relevant thường đứng sớm; điểm cao này không bảo đảm đã lấy đủ decisive evidence. |
-| Faithfulness | 0.436 | 0.058 | 0.857 | Metric yếu nhất; nhiều answer thêm claim ngoài retrieved evidence hoặc bị overlap heuristic phạt khi paraphrase/refuse. |
-| Relevance | 0.708 | 0.556 | 0.958 | Phần lớn answer vẫn đi đúng intent nhưng thường dài và chứa chi tiết không cần thiết. |
-| Completeness | 0.742 | 0.231 | 0.909 | Khá hơn faithfulness, nhưng giảm mạnh khi retriever bỏ sót điều kiện hoặc ngoại lệ quyết định. |
-| Overall Score | 0.629 | 0.296 | 0.810 | Chỉ E05 đạt vùng Good; sáu cases dưới 0.6 cần điều tra sâu. |
+| Metric            | Average |   Min |   Max | Nhận xét                                                                                                                |
+| ----------------- | ------: | ----: | ----: | ----------------------------------------------------------------------------------------------------------------------- |
+| Context Recall    |   0.778 | 0.192 | 1.000 | Coverage trung bình khá nhưng có lỗ hổng lớn ở A01, M07 và H04.                                                         |
+| Context Precision |   0.983 | 0.888 | 1.000 | Các chunk được coi là relevant thường đứng sớm; điểm cao này không bảo đảm đã lấy đủ decisive evidence.                 |
+| Faithfulness      |   0.436 | 0.058 | 0.857 | Metric yếu nhất; nhiều answer thêm claim ngoài retrieved evidence hoặc bị overlap heuristic phạt khi paraphrase/refuse. |
+| Relevance         |   0.708 | 0.556 | 0.958 | Phần lớn answer vẫn đi đúng intent nhưng thường dài và chứa chi tiết không cần thiết.                                   |
+| Completeness      |   0.742 | 0.231 | 0.909 | Khá hơn faithfulness, nhưng giảm mạnh khi retriever bỏ sót điều kiện hoặc ngoại lệ quyết định.                          |
+| Overall Score     |   0.629 | 0.296 | 0.810 | Chỉ E05 đạt vùng Good; sáu cases dưới 0.6 cần điều tra sâu.                                                             |
 
 **Score interpretation**
 
@@ -33,13 +33,13 @@ cases.
 
 **Failure type distribution**
 
-| Failure Type | Count | Percentage |
-|---|---:|---:|
-| hallucination | 6 | 50.0% |
-| irrelevant | 0 | 0.0% |
-| incomplete | 0 | 0.0% |
-| off_topic | 6 | 50.0% |
-| refusal | 0 | 0.0% |
+| Failure Type  | Count | Percentage |
+| ------------- | ----: | ---------: |
+| hallucination |     6 |      50.0% |
+| irrelevant    |     0 |       0.0% |
+| incomplete    |     0 |       0.0% |
+| off_topic     |     6 |      50.0% |
+| refusal       |     0 |       0.0% |
 
 **Chẩn đoán tổng quan:** Vấn đề chính nằm ở retrieval, generation hay cả hai?
 Dùng ít nhất hai metrics để bảo vệ kết luận.
@@ -93,14 +93,14 @@ Relevance: 0.600 | Completeness: 0.231 | Overall: 0.296
 > corpus. Context Precision 1.000 là false positive của ngưỡng lexical overlap,
 > không phản ánh chất lượng semantic của hai chunks này.
 
-| Mức | Câu hỏi | Câu trả lời |
-|---|---|---|
-| Triệu chứng | Vấn đề quan sát được là gì? | Safe refusal bị chấm Overall 0.296 và gán `hallucination`; answer thiếu lời mời quay lại các chủ đề OrbitTech. |
-| Tại sao 1 | Tại sao triệu chứng xảy ra? | Scope evidence không được retrieve, còn model bổ sung lời khuyên khẩn cấp ngoài retrieved contexts. |
-| Tại sao 2 | Tại sao nguyên nhân trên xảy ra? | BM25 không nối được “chẩn đoán/thuốc kê đơn” với đoạn “medical diagnosis”; từ chung như “take” kéo nhầm các chunk về sửa chữa/vận chuyển. |
-| Tại sao 3 | Tại sao vấn đề đó chưa được ngăn chặn? | Pipeline không có intent classifier hoặc rule luôn chèn scope policy cho các intent out-of-scope/adversarial. |
-| Tại sao 4 | Tại sao cơ chế hiện tại chưa phát hiện hoặc xử lý được? | Prompt yêu cầu grounded nhưng không có claim-level verifier; overlap evaluator cũng xem các token chung là evidence phù hợp. |
-| Tại sao 5 | Root cause có thể hành động được là gì? | Thiếu route chuyên biệt cho unsupported intent và thiếu grounding/evaluator semantic cho safe refusal. |
+| Mức       | Câu hỏi                                                 | Câu trả lời                                                                                                                               |
+| --------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Symptom   | Vấn đề quan sát được là gì?                             | Safe refusal bị chấm Overall 0.296 và gán`hallucination`; answer thiếu lời mời quay lại các chủ đề OrbitTech.                             |
+| Why 1     | Tại sao triệu chứng xảy ra?                             | Scope evidence không được retrieve, còn model bổ sung lời khuyên khẩn cấp ngoài retrieved contexts.                                       |
+| Why 2     | Tại sao nguyên nhân trên xảy ra?                        | BM25 không nối được “chẩn đoán/thuốc kê đơn” với đoạn “medical diagnosis”; từ chung như “take” kéo nhầm các chunk về sửa chữa/vận chuyển. |
+| Why 3     | Tại sao vấn đề đó chưa được ngăn chặn?                  | Pipeline không có intent classifier hoặc rule luôn chèn scope policy cho các intent out-of-scope/adversarial.                             |
+| Why 4     | Tại sao cơ chế hiện tại chưa phát hiện hoặc xử lý được? | Prompt yêu cầu grounded nhưng không có claim-level verifier; overlap evaluator cũng xem các token chung là evidence phù hợp.              |
+| Tại sao 5 | Root cause có thể hành động được là gì?                 | Thiếu route chuyên biệt cho unsupported intent và thiếu grounding/evaluator semantic cho safe refusal.                                    |
 
 **Root cause từ `find_root_cause()`:**
 
@@ -168,14 +168,14 @@ Relevance: 0.800 | Completeness: 0.452 | Overall: 0.471
 > lời thực tế trung thực nói evidence thiếu nhưng không thể hoàn thành nửa sau của
 > yêu cầu, rồi làm loãng câu trả lời bằng các chi tiết ngoài intent.
 
-| Mức | Câu hỏi | Câu trả lời |
-|---|---|---|
-| Triệu chứng | Vấn đề quan sát được là gì? | Câu trả lời đúng quy trình nhưng bỏ toàn bộ yêu cầu tiếp nhận, khiến Overall chỉ đạt 0.471. |
-| Tại sao 1 | Tại sao triệu chứng xảy ra? | Chunk `OT-07-P02` chứa danh sách bắt buộc không nằm trong top 5. |
-| Tại sao 2 | Tại sao nguyên nhân trên xảy ra? | Lexical BM25 và stemming đơn giản không xếp đủ cao quan hệ giữa “thông tin cần thiết/mở yêu cầu” với câu “yêu cầu cần có…”. |
-| Tại sao 3 | Tại sao vấn đề đó chưa được ngăn chặn? | Retrieval chỉ dùng một query và top-k cố định, không tách câu hỏi nhiều phần để retrieve evidence cho từng câu hỏi con. |
-| Tại sao 4 | Tại sao cơ chế hiện tại chưa phát hiện hoặc xử lý được? | Không có coverage check đối chiếu hai intent “quy trình” và “thông tin bắt buộc” trước generation. |
-| Tại sao 5 | Root cause có thể hành động được là gì? | Retriever thiếu query decomposition/hybrid semantic search và answer planner thiếu kiểm tra coverage theo từng phần câu hỏi. |
+| Mức     | Câu hỏi                                                 | Câu trả lời                                                                                                                  |
+| ------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Symptom | Vấn đề quan sát được là gì?                             | Câu trả lời đúng quy trình nhưng bỏ toàn bộ yêu cầu tiếp nhận, khiến Overall chỉ đạt 0.471.                                  |
+| Why 1   | Tại sao triệu chứng xảy ra?                             | Chunk`OT-07-P02` chứa danh sách bắt buộc không nằm trong top 5.                                                              |
+| Why 2   | Tại sao nguyên nhân trên xảy ra?                        | Lexical BM25 và stemming đơn giản không xếp đủ cao quan hệ giữa “thông tin cần thiết/mở yêu cầu” với câu “yêu cầu cần có…”.  |
+| Why 3   | Tại sao vấn đề đó chưa được ngăn chặn?                  | Retrieval chỉ dùng một query và top-k cố định, không tách câu hỏi nhiều phần để retrieve evidence cho từng câu hỏi con.      |
+| Why 4   | Tại sao cơ chế hiện tại chưa phát hiện hoặc xử lý được? | Không có coverage check đối chiếu hai intent “quy trình” và “thông tin bắt buộc” trước generation.                           |
+| Why 5   | Root cause có thể hành động được là gì?                 | Retriever thiếu query decomposition/hybrid semantic search và answer planner thiếu kiểm tra coverage theo từng phần câu hỏi. |
 
 **Root cause và giải pháp đề xuất:**
 
@@ -235,14 +235,14 @@ Relevance: 0.682 | Completeness: 0.543 | Overall: 0.494
 > chunks cũng là noise. Vì evidence thiếu, model không bịa con số nhưng lại
 > khẳng định quá mức rằng paid repair là “sole remedy offered”.
 
-| Mức | Câu hỏi | Câu trả lời |
-|---|---|---|
-| Triệu chứng | Vấn đề quan sát được là gì? | Câu trả lời bỏ thời hạn hiệu lực của báo giá, phí 35 USD và ngoại lệ — chính là phần “khách từ chối” mà câu hỏi nhấn mạnh. |
-| Tại sao 1 | Tại sao triệu chứng xảy ra? | Top 5 không chứa `OT-07-P04`; model chỉ có evidence cho trường hợp loại trừ bảo hành và gói thành viên mua sau sự cố. |
-| Tại sao 2 | Tại sao nguyên nhân trên xảy ra? | BM25 khớp nhiều đoạn có từ “repair/return/OrbitPlus”, trong khi normalization yếu giữa “declined” và “declines”. |
-| Tại sao 3 | Tại sao vấn đề đó chưa được ngăn chặn? | Retriever không ưu tiên chính xác điều kiện policy theo mệnh đề “nếu khách từ chối” và không rerank theo coverage của toàn câu hỏi. |
-| Tại sao 4 | Tại sao cơ chế hiện tại chưa phát hiện hoặc xử lý được? | Không có missing-clause detector; prompt cho phép answer dài dù một nhánh điều kiện không có evidence. |
-| Tại sao 5 | Root cause có thể hành động được là gì? | Thiếu hybrid retrieval/query decomposition cho multi-hop policy và thiếu rule kiểm tra đủ condition/exception trước khi trả lời. |
+| Mức     | Câu hỏi                                                 | Câu trả lời                                                                                                                         |
+| ------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Symptom | Vấn đề quan sát được là gì?                             | Câu trả lời bỏ thời hạn hiệu lực của báo giá, phí 35 USD và ngoại lệ — chính là phần “khách từ chối” mà câu hỏi nhấn mạnh.          |
+| Why 1   | Tại sao triệu chứng xảy ra?                             | Top 5 không chứa`OT-07-P04`; model chỉ có evidence cho trường hợp loại trừ bảo hành và gói thành viên mua sau sự cố.                |
+| Why 2   | Tại sao nguyên nhân trên xảy ra?                        | BM25 khớp nhiều đoạn có từ “repair/return/OrbitPlus”, trong khi normalization yếu giữa “declined” và “declines”.                    |
+| Why 3   | Tại sao vấn đề đó chưa được ngăn chặn?                  | Retriever không ưu tiên chính xác điều kiện policy theo mệnh đề “nếu khách từ chối” và không rerank theo coverage của toàn câu hỏi. |
+| Why 4   | Tại sao cơ chế hiện tại chưa phát hiện hoặc xử lý được? | Không có missing-clause detector; prompt cho phép answer dài dù một nhánh điều kiện không có evidence.                              |
+| Why 5   | Root cause có thể hành động được là gì?                 | Thiếu hybrid retrieval/query decomposition cho multi-hop policy và thiếu rule kiểm tra đủ condition/exception trước khi trả lời.    |
 
 **Root cause và giải pháp đề xuất:**
 
@@ -259,11 +259,11 @@ Relevance: 0.682 | Completeness: 0.543 | Overall: 0.494
 
 ## 3. Failure Clustering
 
-| Cluster | Root Cause | Failure IDs | Priority |
-|---|---|---|---|
-| 1 | Lexical retrieval bỏ sót decisive policy/scope chunk, đặc biệt ở câu multi-part hoặc adversarial. | E03, M07, H03, H04, A01, A03 | High |
-| 2 | Generator thêm claim/chi tiết ngoài evidence hoặc trả lời dài làm giảm grounding và relevance. | E01, M02, M06, H01, H02, A01, A02 | High |
-| 3 | Word-overlap evaluator không hiểu entailment, paraphrase và safe refusal; failure label có thể sai semantic. | M02, H01, A01, A02, A03 | Medium |
+| Cluster | Root Cause                                                                                                   | Failure IDs                       | Priority |
+| ------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------- | -------- |
+| 1       | Lexical retrieval bỏ sót decisive policy/scope chunk, đặc biệt ở câu multi-part hoặc adversarial.            | E03, M07, H03, H04, A01, A03      | High     |
+| 2       | Generator thêm claim/chi tiết ngoài evidence hoặc trả lời dài làm giảm grounding và relevance.               | E01, M02, M06, H01, H02, A01, A02 | High     |
+| 3       | Word-overlap evaluator không hiểu entailment, paraphrase và safe refusal; failure label có thể sai semantic. | M02, H01, A01, A02, A03           | Medium   |
 
 **Nếu chỉ được sửa một cluster, bạn chọn cluster nào và vì sao?**
 
@@ -282,20 +282,20 @@ Output của `generate_improvement_log()` (F001–F012 lần lượt tương ứ
 failure theo thứ tự E01, E03, M02, M06, M07, H01, H02, H03, H04, A01, A02,
 A03):
 
-| ID failure | Loại | Root cause | Giải pháp đề xuất | Trạng thái |
-|------------|------|------------|---------------|--------|
-| F001 | off_topic | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Thêm grounding check để từ chối các claim không được retrieved context hỗ trợ | Mở |
-| F002 | off_topic | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Thêm intent classification và định tuyến các intent không được hỗ trợ trước generation | Mở |
-| F003 | hallucination | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Thêm các failure case đại diện vào regression benchmark | Mở |
-| F004 | off_topic | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể | Mở |
-| F005 | hallucination | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể | Mở |
-| F006 | hallucination | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể | Mở |
-| F007 | off_topic | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể | Mở |
-| F008 | off_topic | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể | Mở |
-| F009 | hallucination | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể | Mở |
-| F010 | hallucination | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể | Mở |
-| F011 | hallucination | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể | Mở |
-| F012 | off_topic | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể | Mở |
+| ID failure | Loại          | Root cause                                                  | Giải pháp đề xuất                                                                      | Trạng thái |
+| ---------- | ------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------- |
+| F001       | off_topic     | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Thêm grounding check để từ chối các claim không được retrieved context hỗ trợ          | Mở         |
+| F002       | off_topic     | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Thêm intent classification và định tuyến các intent không được hỗ trợ trước generation | Mở         |
+| F003       | hallucination | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Thêm các failure case đại diện vào regression benchmark                                | Mở         |
+| F004       | off_topic     | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể                                    | Mở         |
+| F005       | hallucination | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể                                    | Mở         |
+| F006       | hallucination | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể                                    | Mở         |
+| F007       | off_topic     | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể                                    | Mở         |
+| F008       | off_topic     | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể                                    | Mở         |
+| F009       | hallucination | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể                                    | Mở         |
+| F010       | hallucination | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể                                    | Mở         |
+| F011       | hallucination | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể                                    | Mở         |
+| F012       | off_topic     | Context bị thiếu hoặc không liên quan — cải thiện retrieval | Review trace và xác định biện pháp khắc phục cụ thể                                    | Mở         |
 
 **Ba improvement suggestions ưu tiên**
 
@@ -303,11 +303,11 @@ A03):
 2. Thêm intent classification và định tuyến các intent không được hỗ trợ trước generation.
 3. Thêm các failure case đại diện vào regression benchmark.
 
-| Đề xuất | Metric mục tiêu | Phương pháp xác minh |
-|---|---|---|
-| Claim-level grounding check và answer checklist | Faithfulness; số `hallucination` | Chạy lại 20 cases; đối chiếu từng claim với retrieved chunk; yêu cầu Faithfulness tăng và không làm Completeness giảm quá 0.05. |
-| Intent classification cho in-scope/out-of-scope/injection | Relevance; safe-refusal pass rate; số `off_topic` | Unit-test các biến thể A01/A02 và review bằng rubric Safety/privacy; không cho unsupported intent đi vào retriever thông thường. |
-| Đưa A01, M07, H04 cùng paraphrase vào regression benchmark | Worst-case Overall; Context Recall; regression stability | Lưu baseline theo case, chạy `run_regression()` trên mọi PR và thêm assertion cho decisive evidence/critical facts. |
+| Đề xuất                                                    | Metric mục tiêu                                          | Phương pháp xác minh                                                                                                             |
+| ---------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Claim-level grounding check và answer checklist            | Faithfulness; số`hallucination`                          | Chạy lại 20 cases; đối chiếu từng claim với retrieved chunk; yêu cầu Faithfulness tăng và không làm Completeness giảm quá 0.05.  |
+| Intent classification cho in-scope/out-of-scope/injection  | Relevance; safe-refusal pass rate; số`off_topic`         | Unit-test các biến thể A01/A02 và review bằng rubric Safety/privacy; không cho unsupported intent đi vào retriever thông thường. |
+| Đưa A01, M07, H04 cùng paraphrase vào regression benchmark | Worst-case Overall; Context Recall; regression stability | Lưu baseline theo case, chạy`run_regression()` trên mọi PR và thêm assertion cho decisive evidence/critical facts.               |
 
 ---
 
@@ -359,11 +359,11 @@ Thay đổi code/prompt/retrieval → [Kiểm tra dataset/schema + unit tests] �
 Đánh giá → Phân tích → Cải thiện → Mở rộng benchmark → Lặp lại
 ```
 
-| Mức ưu tiên | Hành động | Metric dự kiến cải thiện | Tác động kỳ vọng |
-|---:|---|---|---|
-| 1 | Query decomposition + hybrid BM25/semantic retrieval + coverage reranking | Context Recall 0.778 → ≥0.85; Completeness | Lấy được decisive chunks cho câu multi-part, giảm câu trả lời “insufficient evidence” sai. |
-| 2 | Claim-level grounding guard và structured answer checklist | Faithfulness 0.436 → ≥0.60; giảm hallucination | Không thêm claim ngoài evidence và nêu đủ date/amount/condition/exception. |
-| 3 | Calibrate overlap metrics bằng rubric LLM judge + human labels | Agreement với human review; failure-label precision | Phân biệt safe refusal/paraphrase với hallucination thật và giảm false positive. |
+| Mức ưu tiên | Hành động                                                                 | Metric dự kiến cải thiện                            | Tác động kỳ vọng                                                                           |
+| ----------: | ------------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+|           1 | Query decomposition + hybrid BM25/semantic retrieval + coverage reranking | Context Recall 0.778 → ≥0.85; Completeness          | Lấy được decisive chunks cho câu multi-part, giảm câu trả lời “insufficient evidence” sai. |
+|           2 | Claim-level grounding guard và structured answer checklist                | Faithfulness 0.436 → ≥0.60; giảm hallucination      | Không thêm claim ngoài evidence và nêu đủ date/amount/condition/exception.                 |
+|           3 | Calibrate overlap metrics bằng rubric LLM judge + human labels            | Agreement với human review; failure-label precision | Phân biệt safe refusal/paraphrase với hallucination thật và giảm false positive.           |
 
 **Hai hoặc ba failure cases nào cần thêm vào benchmark ở vòng tiếp theo?**
 
