@@ -552,7 +552,7 @@ sinh actual answers và làm Exercise 3.2.
 
 ---
 
-## 7. Cấu hình OpenAI API
+## 7. Cấu hình API
 
 Chỉ `domain_assistant.py` cần API key.
 
@@ -568,9 +568,26 @@ Windows PowerShell:
 Copy-Item .env.example .env
 ```
 
-Mở `.env` và điền:
+### MWAPI / Claude
+
+Mở `.env` và điền key do **MWAPI cấp** cùng model ID hiển thị trong Model Plaza:
 
 ```dotenv
+AI_PROVIDER=mwapi
+MWAPI_API_KEY=<MWAPI_API_KEY_CUA_BAN>
+MWAPI_BASE_URL=https://api.mwapi.dev
+MWAPI_MODEL=<MODEL_ID_TU_MWAPI_MODEL_PLAZA>
+```
+
+Không dùng một model ID suy đoán: khả năng truy cập model phụ thuộc tài khoản và
+nhóm giá của MWAPI.
+
+### OpenAI (tùy chọn)
+
+Để dùng cấu hình OpenAI ban đầu, điền:
+
+```dotenv
+AI_PROVIDER=openai
 OPENAI_API_KEY=<API_KEY_CUA_BAN>
 OPENAI_MODEL=gpt-4o-mini
 ```

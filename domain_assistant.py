@@ -20,6 +20,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Protocol
 
+from anthropic import Anthropic, APIError as AnthropicAPIError
 from dotenv import load_dotenv
 from openai import OpenAI, OpenAIError
 
@@ -246,11 +247,15 @@ class OpenAIGenerator:
     def __init__(self, max_output_tokens: int = 300) -> None:
         api_key = os.getenv("OPENAI_API_KEY", "").strip()
         self.model = os.getenv("OPENAI_MODEL", "").strip()
+        base_url = os.getenv("OPENAI_BASE_URL", "").strip()
         if not api_key:
             raise RuntimeError("OPENAI_API_KEY is missing from .env")
         if not self.model:
             raise RuntimeError("OPENAI_MODEL is missing from .env")
-        self.client = OpenAI(api_key=api_key)
+        client_options: dict[str, Any] = {"api_key": api_key}
+        if base_url:
+            client_options["base_url"] = base_url
+        self.client = OpenAI(**client_options)
         self.max_output_tokens = max_output_tokens
 
     def generate(self, prompt: str) -> str:
@@ -264,6 +269,51 @@ class OpenAIGenerator:
         if not answer:
             raise RuntimeError("OpenAI returned an empty answer")
         return answer
+
+
+class MWAPIClaudeGenerator:
+    """Generate answers through MWAPI's Anthropic-compatible Messages API."""
+
+    def __init__(self, max_output_tokens: int = 300) -> None:
+        api_key = os.getenv("MWAPI_API_KEY", "").strip()
+        self.model = os.getenv("MWAPI_MODEL", "").strip()
+        base_url = os.getenv("MWAPI_BASE_URL", "https://api.mwapi.dev").strip()
+        if not api_key:
+            raise RuntimeError("MWAPI_API_KEY is missing from .env")
+        if not self.model:
+            raise RuntimeError("MWAPI_MODEL is missing from .env")
+        if not base_url:
+            raise RuntimeError("MWAPI_BASE_URL is missing from .env")
+        self.client = Anthropic(api_key=api_key, base_url=base_url.rstrip("/"))
+        self.max_output_tokens = max_output_tokens
+
+    def generate(self, prompt: str) -> str:
+        response = self.client.messages.create(
+            model=self.model,
+            max_tokens=self.max_output_tokens,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        answer = "".join(
+            block.text
+            for block in response.content
+            if block.type == "text"
+        ).strip()
+        if not answer:
+            raise RuntimeError("MWAPI/Claude returned an empty answer")
+        return answer
+
+
+def build_generator_from_env() -> TextGenerator:
+    """Create the configured provider without exposing credentials in code."""
+
+    provider = os.getenv("AI_PROVIDER", "openai").strip().lower()
+    if provider in {"mwapi", "claude", "anthropic"}:
+        return MWAPIClaudeGenerator()
+    if provider == "openai":
+        return OpenAIGenerator()
+    raise RuntimeError(
+        "AI_PROVIDER must be one of: mwapi, claude, anthropic, openai"
+    )
 
 
 @dataclass(frozen=True)
@@ -299,7 +349,7 @@ class DomainAssistant:
         return cls(
             corpus_id,
             BM25Retriever(chunks),
-            generator if generator is not None else OpenAIGenerator(),
+            generator if generator is not None else build_generator_from_env(),
             top_k,
         )
 
@@ -508,7 +558,14 @@ def main() -> int:
             json.dumps(artifact, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
-    except (OSError, OpenAIError, TypeError, ValueError, RuntimeError) as exc:
+    except (
+        OSError,
+        OpenAIError,
+        AnthropicAPIError,
+        TypeError,
+        ValueError,
+        RuntimeError,
+    ) as exc:
         print(f"ERROR: {exc}")
         return 2
     print(f"Generated {len(artifact['answers'])} actual answers: {output}")
