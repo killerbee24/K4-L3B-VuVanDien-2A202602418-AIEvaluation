@@ -100,7 +100,7 @@ Relevance: 0.600 | Completeness: 0.231 | Overall: 0.296
 | Why 2     | Tại sao nguyên nhân trên xảy ra?                        | BM25 không nối được “chẩn đoán/thuốc kê đơn” với đoạn “medical diagnosis”; từ chung như “take” kéo nhầm các chunk về sửa chữa/vận chuyển. |
 | Why 3     | Tại sao vấn đề đó chưa được ngăn chặn?                  | Pipeline không có intent classifier hoặc rule luôn chèn scope policy cho các intent out-of-scope/adversarial.                             |
 | Why 4     | Tại sao cơ chế hiện tại chưa phát hiện hoặc xử lý được? | Prompt yêu cầu grounded nhưng không có claim-level verifier; overlap evaluator cũng xem các token chung là evidence phù hợp.              |
-| Tại sao 5 | Root cause có thể hành động được là gì?                 | Thiếu route chuyên biệt cho unsupported intent và thiếu grounding/evaluator semantic cho safe refusal.                                    |
+|Why 5 | Root cause có thể hành động được là gì?                 | Thiếu route chuyên biệt cho unsupported intent và thiếu grounding/evaluator semantic cho safe refusal.                                    |
 
 **Root cause từ `find_root_cause()`:**
 
